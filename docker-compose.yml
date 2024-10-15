@@ -1,0 +1,9 @@
+services:
+  discobot:
+    build: ./
+    container_name: "discobot"
+    ports:
+      - "3000:3000"
+    # command: python
+    stdin_open: true
+    tty: true
