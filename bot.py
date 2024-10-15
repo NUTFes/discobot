@@ -19,6 +19,8 @@ intents.members = True  # メンバー情報を取得
 # Discordクライアントの初期化
 client = discord.Client(intents=intents)
 
+EXCLUDED_CHANNELS = ['1on1']
+
 def send_slack_message(message):
     payload = {
         "text": message
@@ -33,16 +35,17 @@ async def on_ready():
 
 @client.event
 async def on_voice_state_update(member, before, after):
+    if (before.channel and before.channel.name in EXCLUDED_CHANNELS) or (after.channel and after.channel.name in EXCLUDED_CHANNELS):
+        return
+
     if before.channel is None and after.channel is not None:
         # メンバーがボイスチャンネルに参加した
         message = f"{member.display_name} がボイスチャンネル 「{after.channel.name}」 に参加しました！"
         send_slack_message(message)
-    elif before.channel is not None and after.channel is None:
-        # メンバーがボイスチャンネルから退出した
-        message = f"{member.display_name} がボイスチャンネル 「{before.channel.name}」 から退出しました！"
-        send_slack_message(message)
+    # elif before.channel is not None and after.channel is None:
+    #     message = f"{member.display_name} がボイスチャンネル 「{before.channel.name}」 から退出しました！"
+    #     send_slack_message(message)
     elif before.channel != after.channel:
-        # メンバーがボイスチャンネル間を移動した
         message = f"{member.display_name} がボイスチャンネル 「{before.channel.name}」 から 「{after.channel.name}」 に移動しました！"
         send_slack_message(message)
 
