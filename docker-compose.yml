@@ -1,0 +1,6 @@
+services:
+  discobot:
+    build: ./
+    container_name: "discobot"
+    stdin_open: true
+    tty: true
