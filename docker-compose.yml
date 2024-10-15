@@ -2,6 +2,5 @@ services:
   discobot:
     build: ./
     container_name: "discobot"
-    # command: python
     stdin_open: true
     tty: true
